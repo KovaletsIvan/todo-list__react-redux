@@ -3,8 +3,8 @@ import React from "react";
 class CreateTaskInput extends React.Component {
   state = {
     value: ''
-
   }
+  
   handleChange = (e) => {
     this.setState({
       value: e.target.value

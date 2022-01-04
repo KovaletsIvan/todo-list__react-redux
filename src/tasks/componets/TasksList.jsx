@@ -1,9 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
-import { getTasksList } from "../tasks.actions";
+import PropTypes from "prop-types";
+import {
+  getTasksList,
+  updateTaskThunk,
+  deleteTasksThunk,
+  creteTasksThunk,
+} from "../tasks.actions";
 import Task from "./Task";
 import CreateTaskInput from "./CreateTaskInput";
-import { createTask, updateTask, deleteTask } from "../tasksGateway";
 import { tasksSelector } from "../tasks.selectors";
 
 class TasksList extends React.Component {
@@ -11,38 +16,18 @@ class TasksList extends React.Component {
     this.props.getTasksList();
   }
 
-  onCreate = (text) => {
-    const newTask = {
-      text,
-      done: false,
-    };
-    createTask(newTask).then(() => this.props.getTasksList());
-  };
-  handleTaskStatusChange = (id) => {
-    const { text, done } = this.props.todoList.find((task) => task.id === id);
-    const updatedTasks = {
-      text,
-      done: !done,
-    };
-    updateTask(id, updatedTasks).then(() => this.props.getTasksList());
-  };
-
-  hendleTaskDelete = (id) => {
-    deleteTask(id).then(() => this.props.getTasksList());
-  };
   render() {
-    console.log(this.props);
     const sortedList = this.props.todoList
       .slice()
       .sort((a, b) => a.done - b.done);
     return (
       <main className="todo-list">
-        <CreateTaskInput onCreate={this.onCreate} />
+        <CreateTaskInput onCreate={this.props.creteTasksThunk} />
         <ul className="list">
           {sortedList.map((task) => (
             <Task
-              onChange={this.handleTaskStatusChange}
-              onDelete={this.hendleTaskDelete}
+              onChange={this.props.updateTaskThunk}
+              onDelete={this.props.deleteTasksThunk}
               key={task.id}
               {...task}
             />
@@ -53,8 +38,19 @@ class TasksList extends React.Component {
   }
 }
 
+TasksList.propTypes = {
+  tasks: PropTypes.arrayOf(PropTypes.shape()),
+  getTasksList: PropTypes.func.isRequired,
+  updateTaskThunk: PropTypes.func.isRequired,
+  deleteTasksThunk: PropTypes.func.isRequired,
+  creteTasksThunk: PropTypes.func.isRequired,
+};
+
 const mapDispatch = {
   getTasksList: getTasksList,
+  updateTaskThunk: updateTaskThunk,
+  deleteTasksThunk: deleteTasksThunk,
+  creteTasksThunk: creteTasksThunk,
 };
 const mapState = (state) => {
   return {
