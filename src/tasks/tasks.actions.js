@@ -7,7 +7,7 @@ import {
 import { tasksSelector } from "./tasks.selectors";
 
 export const TASK_LIST_RECIVED = "TASK_LIST_RECIVED";
-export const CHANGE_TASK_STATUS = "CHANGE_TASK_STATUS";
+
 
 const taskListRecived = (tasksList) => {
   return {
